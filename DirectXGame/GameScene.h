@@ -1,11 +1,15 @@
 #pragma once
 #include "KamataEngine.h"
+#include "Player.h"
 
 
 
 
 // ゲームシーン
 class GameScene {
+	private:
+
+
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
@@ -21,6 +25,10 @@ class GameScene {
 
 	//　カメラ
 	KamataEngine::Camera camera_;
+
+	//Player
+	Player* player_ = nullptr;
+
 
 public:
 	~GameScene();

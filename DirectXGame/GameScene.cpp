@@ -4,7 +4,12 @@
 using namespace KamataEngine;
 
 //GameScene::~GameScene() { delete sprite_; }
-GameScene::~GameScene() { delete model_; }
+GameScene::~GameScene() {
+	delete model_;
+	delete sprite_;
+	delete player_;
+}
+
 
 void GameScene::Initialize() {
 	// 初期化処理
@@ -23,7 +28,11 @@ void GameScene::Initialize() {
 	// 音声再生
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,true);
+
+	player_ = new Player();
+	player_->Initialize(model_, textureHandle_, &camera_);
 }
+
 
 
 void GameScene::Update() {
@@ -42,6 +51,9 @@ void GameScene::Update() {
 		// 音声を停止
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
+
+	//player update	
+	player_->Update();
 
 	//// デバッグテキストの表示
 	//ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);	
@@ -62,9 +74,13 @@ void GameScene::Draw() {
 	//// スプライトの描画後処理
 	//Sprite::PostDraw();
 
+	// player draw
+	player_->Draw();
 	// 3Dモデルの描画
-	model_->Draw(worldTransform_, camera_,textureHandle_);
+	/*model_->Draw(worldTransform_, camera_,textureHandle_);*/
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
+
+	
 }
