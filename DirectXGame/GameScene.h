@@ -2,9 +2,6 @@
 #include "KamataEngine.h"
 #include "Player.h"
 
-
-
-
 // ゲームシーン
 class GameScene {
 	private:
