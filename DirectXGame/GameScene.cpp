@@ -8,6 +8,10 @@ GameScene::~GameScene() {
 	delete model_;
 	delete sprite_;
 	delete player_;
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		delete worldTransformBlock;
+	}
+	worldTransformBlocks_.clear();
 }
 
 
@@ -31,6 +35,23 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_, &camera_);
+
+	// 要素数
+	const uint32_t kNumBlockHorizontal = 20;
+	// ブロック1個分の横幅
+	const float kBlockWidth = 2.0f;
+	// 要素数を変更する
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+
+	// キューブの生成
+	for (uint32_t i = 0; i < kNumBlockHorizontal; i++) {
+		// ワルドトランスフォームのインスタンスを生成
+		WorldTransform* worldTransformBlock = new WorldTransform();
+		worldTransformBlock->Initialize();
+		worldTransformBlocks_[i]->translation_.x = i * kBlockWidth;
+		worldTransformBlock->translation_.y = 0.0f;
+	}
+
 }
 
 
@@ -57,6 +78,12 @@ void GameScene::Update() {
 
 	//// デバッグテキストの表示
 	//ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);	
+
+	// ブロック更新
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+	}
+	
 }	
 
 void GameScene::Draw() {

@@ -1,6 +1,8 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include <vector>
+#include "MyMath.h" 
 
 // ゲームシーン
 class GameScene {
@@ -26,6 +28,7 @@ class GameScene {
 	//Player
 	Player* player_ = nullptr;
 
+	std::vector<WorldTransform*> worldTransformBlocks_;
 
 public:
 	~GameScene();
