@@ -2,7 +2,7 @@
 #include "KamataEngine.h"
 #include "Player.h"
 #include <vector>
-#include "MyMath.h" 
+
 
 // ゲームシーン
 class GameScene {
@@ -12,6 +12,7 @@ class GameScene {
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
+	
 
 	//　サウンドデータハンドル
 	uint32_t soundDataHandle_ = 0;
@@ -28,7 +29,7 @@ class GameScene {
 	//Player
 	Player* player_ = nullptr;
 
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
 public:
 	~GameScene();

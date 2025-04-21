@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "MyMath.h"
 
 
 using namespace KamataEngine;
@@ -6,6 +7,7 @@ using namespace KamataEngine;
 //GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() {
 	delete model_;
+
 	delete sprite_;
 	delete player_;
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
@@ -20,6 +22,7 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("Cookie.png");
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 	model_ = Model::Create();
+	
 
 	// ワルドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -37,19 +40,24 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, textureHandle_, &camera_);
 
 	// 要素数
+	const uint32_t kNumBlockVertical = 10;
 	const uint32_t kNumBlockHorizontal = 20;
 	// ブロック1個分の横幅
 	const float kBlockWidth = 2.0f;
+	const float kBlockHeight = 2.0f;
 	// 要素数を変更する
-	worldTransformBlocks_.resize(kNumBlockHorizontal);
-
+	/*worldTransformBlocks_.resize(kNumBlockHorizontal);*/
+	worldTransformBlocks_.resize(kNumBlockVertical);
 	// キューブの生成
-	for (uint32_t i = 0; i < kNumBlockHorizontal; i++) {
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+		for (uint32_t j = 0; j < kNumBlockHorizontal; j++){
 		// ワルドトランスフォームのインスタンスを生成
-		WorldTransform* worldTransformBlock = new WorldTransform();
-		worldTransformBlock->Initialize();
-		worldTransformBlocks_[i]->translation_.x = i * kBlockWidth;
-		worldTransformBlock->translation_.y = 0.0f;
+		worldTransformBlocks_[i][j] = new WorldTransform();
+		worldTransformBlocks_[i][j]->Initialize();
+		worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * i;
+		worldTransformBlocks_[i][j]->translation_.y = 0.0f;
+	    }
 	}
 
 }
@@ -81,7 +89,11 @@ void GameScene::Update() {
 
 	// ブロック更新
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+
 		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+		// 定数バッファに転送する
+		worldTransformBlock->TransferMatrix();
+	
 	}
 	
 }	
@@ -98,6 +110,11 @@ void GameScene::Draw() {
 	// player draw
 	player_->Draw();
 
+	// ブロックの描画
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		// モデルの描画
+		model_->Draw(*worldTransformBlock, camera_);
+	}
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
