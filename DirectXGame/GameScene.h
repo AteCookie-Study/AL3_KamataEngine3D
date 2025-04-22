@@ -4,11 +4,14 @@
 #include <vector>
 
 
+
+
+
 // ゲームシーン
 class GameScene {
 	private:
 
-
+		KamataEngine::Input* input_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
@@ -30,6 +33,13 @@ class GameScene {
 	Player* player_ = nullptr;
 
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+
+	// デバッグカメラ有效
+	bool isDebugCameraActive_ = false;
+
+	
+	// デバッグカメラ
+	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 
 public:
 	~GameScene();
