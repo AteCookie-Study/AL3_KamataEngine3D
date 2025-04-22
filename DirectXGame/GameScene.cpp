@@ -55,6 +55,9 @@ void GameScene::Initialize() {
 	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 		for (uint32_t j = 0; j < kNumBlockHorizontal; j++){
+			if (j % 2 == 0)
+				continue;
+			
 		// ワルドトランスフォームのインスタンスを生成
 		worldTransformBlocks_[i][j] = new WorldTransform();
 		worldTransformBlocks_[i][j]->Initialize();
@@ -93,9 +96,12 @@ void GameScene::Update() {
 	// ブロック更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
 			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
+			
 		}
 	}
 	
@@ -118,6 +124,8 @@ void GameScene::Draw() {
 	
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
 			// モデルの描画
 			model_->Draw(*worldTransformBlock, camera_);
 		}
