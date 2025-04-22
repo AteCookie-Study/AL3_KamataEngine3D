@@ -10,9 +10,12 @@ GameScene::~GameScene() {
 
 	delete sprite_;
 	delete player_;
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		delete worldTransformBlock;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
 	}
+
 	worldTransformBlocks_.clear();
 }
 
@@ -55,8 +58,8 @@ void GameScene::Initialize() {
 		// ワルドトランスフォームのインスタンスを生成
 		worldTransformBlocks_[i][j] = new WorldTransform();
 		worldTransformBlocks_[i][j]->Initialize();
-		worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * i;
-		worldTransformBlocks_[i][j]->translation_.y = 0.0f;
+		worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+		worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
 	    }
 	}
 
@@ -88,13 +91,14 @@ void GameScene::Update() {
 	//ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);	
 
 	// ブロック更新
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-
-		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-		// 定数バッファに転送する
-		worldTransformBlock->TransferMatrix();
-	
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
 	}
+	
 	
 }	
 
@@ -111,10 +115,14 @@ void GameScene::Draw() {
 	player_->Draw();
 
 	// ブロックの描画
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		// モデルの描画
-		model_->Draw(*worldTransformBlock, camera_);
+	
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			// モデルの描画
+			model_->Draw(*worldTransformBlock, camera_);
+		}
 	}
+	
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
