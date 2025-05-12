@@ -30,6 +30,9 @@
     <ClCompile Include="MyMath.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="skydome.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">
@@ -88,6 +91,9 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MyMath.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="skydome.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

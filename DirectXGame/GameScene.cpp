@@ -7,9 +7,10 @@ using namespace KamataEngine;
 //GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() {
 	delete model_;
-
+	delete modelSkydome_;
 	delete sprite_;
 	delete player_;
+	delete skydome_;
 	delete debugCamera_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -27,8 +28,8 @@ void GameScene::Initialize() {
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 	model_ = Model::Create();
 	input_ = Input::GetInstance();
-	
 
+	
 	// ワルドトランスフォームの初期化
 	worldTransform_.Initialize();
 	// カメラ
@@ -43,6 +44,13 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_, &camera_);
+
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_ ,&camera_);
+
+	model_ = Model::CreateFromOBJ("cube");
+	
 
 	// 要素数
 	const uint32_t kNumBlockVertical = 10;
@@ -70,7 +78,6 @@ void GameScene::Initialize() {
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280,720);
-
 }
 
 
@@ -140,7 +147,7 @@ void GameScene::Draw() {
 
 	// 3Dモデルの描画前処理
 	Model::PreDraw(dxCommon->GetCommandList());
-
+	modelSkydome_->Draw(worldTransform_, camera_);
 	// player draw
 	player_->Draw();
 

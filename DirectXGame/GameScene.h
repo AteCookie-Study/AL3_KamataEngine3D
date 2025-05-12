@@ -1,6 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include "skydome.h"
 #include <vector>
 
 
@@ -15,6 +16,8 @@ class GameScene {
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
+	KamataEngine::Model* modelSkydome_ = nullptr;
+
 	
 
 	//　サウンドデータハンドル
@@ -31,6 +34,7 @@ class GameScene {
 
 	//Player
 	Player* player_ = nullptr;
+	Skydome* skydome_ = nullptr;
 
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
