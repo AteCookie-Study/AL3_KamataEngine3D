@@ -25,9 +25,11 @@ public:
 
 	//Block Quantity
 
-	static inline const uint32_t kNumBlockVirticla = 20;
+	static inline const uint32_t kNumBlockVirtical = 20;
 	static inline const uint32_t kNumBlockHorizontal = 100;
 
 	void RestMapChipData();
+
+	void LoadMapChipCsv(const std::string& filePath);
 
 };
