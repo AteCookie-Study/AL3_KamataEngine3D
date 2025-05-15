@@ -49,7 +49,7 @@ void GameScene::Initialize() {
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_ ,&camera_);
 
-	model_ = Model::CreateFromOBJ("cube");
+	model_ = Model::CreateFromOBJ("block");
 	
 
 	// 要素数
