@@ -2,6 +2,7 @@
 #include "KamataEngine.h"
 #include "Player.h"
 #include "skydome.h"
+#include "MapChipField.h"
 #include <vector>
 
 
@@ -12,7 +13,7 @@
 class GameScene {
 	private:
 
-		KamataEngine::Input* input_ = nullptr;
+	KamataEngine::Input* input_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
@@ -44,6 +45,12 @@ class GameScene {
 	
 	// デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+	// マップチップフィールド
+	MapChipField* mapChipField_;
+
+	// マップチップフィールドのワールドトランスフォーム
+	void GenearteBlocks();
 
 public:
 	~GameScene();

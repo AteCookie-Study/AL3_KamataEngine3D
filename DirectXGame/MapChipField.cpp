@@ -33,4 +33,40 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 	mapChipCsv << file.rdbuf();
 
 	file.close();
+
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		std::string line;
+		getline(mapChipCsv, line);
+
+		std::istringstream line_stream(line);
+
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+			std::string word;
+			getline(line_stream, word, ',');
+
+			if (mapChipTable.contains(word)) {
+				mapChipData_.data[i][j] = mapChipTable[word];
+			}
+			else {
+				assert(false && "Invalid map chip data.");
+			}
+		}
+	}
 }
+
+MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
+	if (xIndex < 0 || kNumBlockHorizontal - 1 < xIndex) {
+		assert(false && "xIndex out of range.");
+		return MapChipType::kBlank;
+	}
+	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
+		assert(false && "yIndex out of range.");
+		return MapChipType::kBlank;
+	}
+	return mapChipData_.data[yIndex][xIndex];
+}
+
+Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { 
+	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
+}
+
