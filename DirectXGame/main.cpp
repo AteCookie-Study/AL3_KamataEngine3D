@@ -7,7 +7,7 @@ using namespace KamataEngine;
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	
 	// エンジンの初期化
-	KamataEngine::Initialize(L"GC2C_03_キョク_キンウ_AL3");
+	KamataEngine::Initialize(L"GC2C_03_キョク_キンウ_AL3_3D");
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
@@ -17,15 +17,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// ゲームシーンの初期化
 	gameScene->Initialize();
 
+	
+
 	// メインループ
 	while (true) {
 		// エンジンの更新
 		if (KamataEngine::Update()) {
 			break;
 		}
+
+		
 		// ゲームシーンの更新
 		gameScene->Update();
 
+		
 
 		// エンジンの描画
 		dxCommon->PreDraw();
@@ -33,6 +38,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		// ゲームシーンの描画
 		gameScene->Draw();
+
+		
 
 		//描画終了
 		dxCommon->PostDraw();
