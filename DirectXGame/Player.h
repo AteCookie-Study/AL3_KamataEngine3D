@@ -6,9 +6,11 @@ class Player {
 public:
 	Player();
 	~Player();
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,const Vector3 position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,const KamataEngine::Vector3 position);
 	void Update();
 	void Draw();
+	KamataEngine::Vector3 velocity_ = {};
+	static inline const float kAcceleration = 0.1f;
 
 	private:
 

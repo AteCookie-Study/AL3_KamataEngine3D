@@ -3,6 +3,7 @@
 
 
 using namespace KamataEngine;
+using namespace MathUtility;
 
 
 
@@ -45,10 +46,11 @@ void GameScene::Initialize() {
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,true);
 
+	model_ = Model::CreateFromOBJ("player");
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18);
 	player_->Initialize(model_, &camera_,playerPosition);
-	model_ = Model::CreateFromOBJ("player");
+	
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
