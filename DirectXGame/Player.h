@@ -11,6 +11,18 @@ public:
 	void Draw();
 	KamataEngine::Vector3 velocity_ = {};
 	static inline const float kAcceleration = 0.1f;
+	static inline const float kAttenuation = 0.9f;	
+	static inline const float kLimitRunSpeed = 0.5f;
+
+	bool onGround_ = true;
+	static inline const float kGravityAcceleration = 0.01f;
+	static inline const float kLimitFallSpeed = 1.0;	
+	static inline const float kJumpAcceleration = 0.2f;
+	
+	enum class LRDirection {
+		kRight, kLeft,
+	};
+	LRDirection lrDirection_ = LRDirection::kRight;
 
 	private:
 
