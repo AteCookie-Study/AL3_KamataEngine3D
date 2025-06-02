@@ -19,6 +19,8 @@ public:
 	static inline const float kLimitFallSpeed = 1.0;	
 	static inline const float kJumpAcceleration = 0.2f;
 	
+	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
 	enum class LRDirection {
 		kRight, kLeft,
 	};

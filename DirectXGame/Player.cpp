@@ -18,7 +18,7 @@ void Player::Initialize(Model* model, Camera* camera, Vector3 position) {
 	model_ = model;
 	camera_ = camera;
 
-	worldTransform_.Initialize();\
+	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f; 
 }

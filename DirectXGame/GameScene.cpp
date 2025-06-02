@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete sprite_;
 	delete player_;
+	delete cameraController_;
 	delete skydome_;
 	delete debugCamera_;
 	delete mapChipField_;
@@ -62,6 +63,12 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenearteBlocks();
+
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_);
+	cameraController_->Reset();
+
 	
 
 	// 要素数
@@ -146,8 +153,14 @@ void GameScene::Update() {
 		camera_.matProjection = debugCamera_->GetCamera().matProjection;
 		camera_.TransferMatrix();
 	} else {
-		camera_.UpdateMatrix();
+		/*camera_.UpdateMatrix();*/
+		camera_.matView = cameraController_->GetViewProjection().matView;
+		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+		camera_.TransferMatrix();
 	}
+
+	// カメラの転送
+	cameraController_->Update();
 }
 
 
