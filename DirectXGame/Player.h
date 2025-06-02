@@ -26,6 +26,9 @@ public:
 	};
 	LRDirection lrDirection_ = LRDirection::kRight;
 
+	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+
+	
 	private:
 
 	//ワルド変換データ
