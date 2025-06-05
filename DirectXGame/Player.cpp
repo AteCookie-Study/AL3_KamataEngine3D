@@ -25,8 +25,77 @@ void Player::Initialize(Model* model, Camera* camera, Vector3 position) {
 
 void Player::Update() {
 
+	// 着地フラグ
+	bool landing = false;
+
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.TransferMatrix();
+
+	//①移動入力 
+	InputMove();
+
+	//②移動量を加味して衝突判定する
+
+	//  衝突情報を初期化
+	CollisionMapInfo collisionMapInfo;
+
+	//移动量に速度の値をコピー
+	collisionMapInfo.move_ = velocity_;
+
+	// マップ衝突判チェック
+	CheckMapCollision(collisionMapInfo);
+
+	//③判定結果を反映して移動させる
+	//  移動
+	worldTransform_.translation_ += velocity_;
+
+	//④天井に接触している場合の処理
+		
+	//⑤壁に接触している場合の処理
+
+	//⑥接地状態の切り替え
+	
+	//  地面との当たり判定
+	//  下降中？
+	if (velocity_.y < 0) {
+		// Y座標が地面以下なら接地
+		if (worldTransform_.translation_.y <= 1.0f) {
+			landing = true;
+		}
+	}
+	if (onGround_) {
+		// 空中状态に移行
+		if (velocity_.y > 0.0f) {
+			onGround_ = false;
+		}
+	} else {
+		if (landing) {
+			worldTransform_.translation_.y = 1.0f; // 地面に着地
+			velocity_.x *= (1.0f - kAttenuation);
+			velocity_.y = 0.0f;
+			onGround_ = true;
+		}
+	}
+	//⑦旋回制御
+	AnimateTurn();
+
+	
+
+		
+		
+
+		
+	
+}
+
+
+void Player::Draw() {
+	
+	// モデルの描画
+	model_->Draw(worldTransform_, *camera_);
+}
+
+void Player::InputMove() {
 
 	// 移動入力
 	// 接地状態
@@ -70,56 +139,31 @@ void Player::Update() {
 			velocity_ += Vector3(0, kJumpAcceleration, 0);
 		}
 	} else { // 空中
-			// 落下速度
-			velocity_ += Vector3(0, -kGravityAcceleration, 0);
-			// 落下速度制限
-			velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+		// 落下速度
+		velocity_ += Vector3(0, -kGravityAcceleration, 0);
+		// 落下速度制限
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
-		
-
-		// 接地判定
-		bool landing = false;
-
-		// 地面との当たり判定
-		// 下降中？
-		if (velocity_.y < 0) {
-			// Y座標が地面以下なら接地
-			if (worldTransform_.translation_.y <= 1.0f) {
-				landing = true;
-			}
-		}
-		if (onGround_) {
-			// 空中状态に移行
-			if (velocity_.y > 0.0f) {
-				onGround_ = false;
-			}
-		} else {
-			if (landing) {
-				worldTransform_.translation_.y = 1.0f; // 地面に着地
-				velocity_.x *= (1.0f - kAttenuation);
-				velocity_.y = 0.0f;
-				onGround_ = true;
-			}
-		}
-		// 回旋制御
-		{
-			float destinationRotationYTable[] = {
-			    std::numbers::pi_v<float> / 2.0f,       // 右向き
-			    std::numbers::pi_v<float> * 3.0f / 2.0f // 左向き
-			};
-			float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-			worldTransform_.rotation_.y = destinationRotationY;
-		}
-
-		// 移動
-		worldTransform_.translation_ += velocity_;
-	
 }
 
 
-void Player::Draw() {
-	
-	// モデルの描画
-	model_->Draw(worldTransform_, *camera_);
+void Player::AnimateTurn() {
+	// 回旋制御
+	{
+		float destinationRotationYTable[] = {
+		    std::numbers::pi_v<float> / 2.0f,       // 右向き
+		    std::numbers::pi_v<float> * 3.0f / 2.0f // 左向き
+		};
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		worldTransform_.rotation_.y = destinationRotationY;
+	}
+
+}
+
+void Player::CheckMapCollision(CollisionMapInfo& info) { 
+	CheckMapCollisionUp(info);
+	/*CheckMapCollisionDown(info);
+	CheckMapCollisionRight(info);
+	CheckMapCollisionLeft(info);*/
 }

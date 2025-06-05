@@ -34,7 +34,11 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	input_ = Input::GetInstance();
 
-	
+	mapChipField_ = new MapChipField();
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
+	GenearteBlocks();
+
 	// ワルドトランスフォームの初期化
 	worldTransform_.Initialize();
 	// カメラ
@@ -47,11 +51,11 @@ void GameScene::Initialize() {
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,true);
 
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	model_ = Model::CreateFromOBJ("player");
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18);
 	player_->Initialize(model_, &camera_,playerPosition);
-	
+	player_->SetMapChipField(mapChipField_);
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
@@ -59,10 +63,8 @@ void GameScene::Initialize() {
 
 	model_ = Model::CreateFromOBJ("block");
 
-	mapChipField_ = new MapChipField();
-	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
-	GenearteBlocks();
+	
 
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
@@ -72,31 +74,6 @@ void GameScene::Initialize() {
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovavleArea(cameraArea);
 	
-
-	// 要素数
-	//const uint32_t kNumBlockVertical = 10;
-	//const uint32_t kNumBlockHorizontal = 20;
-	//// ブロック1個分の横幅
-	//const float kBlockWidth = 2.0f;
-	//const float kBlockHeight = 2.0f;
-	//// 要素数を変更する
-	///*worldTransformBlocks_.resize(kNumBlockHorizontal);*/
-	//worldTransformBlocks_.resize(kNumBlockVertical);
-	//// キューブの生成
-	//for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-	//	worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	//	for (uint32_t j = 0; j < kNumBlockHorizontal; j++){
-	//		if ((i + j) % 2 == 0)
-	//			continue;
-	//		
-	//	// ワルドトランスフォームのインスタンスを生成
-	//	worldTransformBlocks_[i][j] = new WorldTransform();
-	//	worldTransformBlocks_[i][j]->Initialize();
-	//	worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-	//	worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-	//    }
-	//}
-
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280,720);
 }
