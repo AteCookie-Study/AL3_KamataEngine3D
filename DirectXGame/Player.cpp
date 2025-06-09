@@ -3,6 +3,7 @@
 #include <numbers>
 #include "MyMath.h"
 #include <algorithm>
+#include "MapChipField.h"
 
 
 
@@ -47,7 +48,7 @@ void Player::Update() {
 
 	//③判定結果を反映して移動させる
 	//  移動
-	worldTransform_.translation_ += velocity_;
+	worldTransform_.translation_ += collisionMapInfo.move_;
 
 	//④天井に接触している場合の処理
 		
@@ -161,9 +162,62 @@ void Player::AnimateTurn() {
 
 }
 
+KamataEngine::Vector3 Player::CornerPosition(const KamataEngine::Vector3& center, Corner corner) {
+	
+	Vector3 offsetTable[kNumCorner] = {
+	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
+	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}, // kLeftTop
+	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, // kRightBottom
+	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}  // kLeftBottom
+	};
+	return center + offsetTable[static_cast<uint32_t>(corner)];
+}
+
+
+
 void Player::CheckMapCollision(CollisionMapInfo& info) { 
 	CheckMapCollisionUp(info);
-	/*CheckMapCollisionDown(info);
-	CheckMapCollisionRight(info);
-	CheckMapCollisionLeft(info);*/
+	//CheckMapCollisionDown(info);
+	//CheckMapCollisionRight(info);
+	//CheckMapCollisionLeft(info);
+}
+
+void Player::CheckMapCollisionUp(CollisionMapInfo& info) { 
+	if (info.move_.y < 0) {
+		return;
+	}
+	std::array<KamataEngine::Vector3, 4> positionsNew;
+	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move_, static_cast<Corner>(i));
+	}
+	MapChipType mapChipType;
+	bool hit = false;
+
+	IndexSet indexSet;
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+	if (hit) {
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + KamataEngine::Vector3(0,kHeight/2.0f,0));
+		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.move_.y = std::max(0.0f, rect.bottom- worldTransform_.translation_.y-(kHeight/2.0f+kBlank));
+		info.ceiling = true;
+	}
+
+}
+
+void Player::MoveByCollisionResult(const CollisionMapInfo& info) { 
+	worldTransform_.translation_ += info.move_; 
+	if (info.ceiling) {
+		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		velocity_.y = 0.0f; 
+	}
+
 }

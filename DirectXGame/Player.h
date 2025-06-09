@@ -24,6 +24,7 @@ public:
 
 	void InputMove();
 	void CheckMapCollision(CollisionMapInfo& info);
+	void CheckMapCollisionUp(CollisionMapInfo& info);
 	void CheckMapMove();
 	void CheckMapCeiling();
 	void CheckMapWall();
@@ -41,6 +42,7 @@ public:
 	static inline const float kJumpAcceleration = 0.2f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+	static inline const float kBlank = 0.01f;
 	
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
@@ -56,13 +58,19 @@ public:
 	enum Corner {
 		kRightBottom,
 		kLeftBottom,
-		KRightTop,
+		kRightTop,
 		kLeftTop,
 
 		kNumCorner
 	};
+
 	
-	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& cneter, Corner corner);
+	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
+
+	
+
+	//判定結果を反映して移動させる
+	void MoveByCollisionResult(const CollisionMapInfo& info);
 
 	private:
 
