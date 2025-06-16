@@ -19,7 +19,7 @@ public:
 		// 壁衡突フラグ
 		bool hitWall = false;
 		// 移動量
-		KamataEngine::Vector3 move_;
+		KamataEngine::Vector3 move;
 	};
 
 	void InputMove();
