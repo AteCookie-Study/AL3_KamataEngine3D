@@ -26,6 +26,8 @@ public:
 	void CheckMapCollision(CollisionMapInfo& info);
 	void CheckMapCollisionUp(CollisionMapInfo& info);
 	void CheckMapCollisionDown(CollisionMapInfo& info);
+	void CheckMapCollisionLeft(CollisionMapInfo& info);
+	void CheckMapCollisionRight(CollisionMapInfo& info);
 	void CheckMapMove();
 	void CheckMapCeiling();
 	void CheckMapWall();
@@ -38,14 +40,15 @@ public:
 	static inline const float kLimitRunSpeed = 0.5f;
 
 	bool onGround_ = true;
-	static inline const float kGravityAcceleration = 0.01f;
-	static inline const float kLimitFallSpeed = 1.0;	
-	static inline const float kJumpAcceleration = 0.2f;
+	static inline const float kGravityAcceleration = 0.1f;
+	static inline const float kLimitFallSpeed = 1.0f;	
+	static inline const float kJumpAcceleration = 1.0f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
 	static inline const float kBlank = 0.01f;
 	static inline const float kAttenuationLanding = 0.0f;
 	static inline const float kGroundSearchHeight = 0.06f;
+	static inline const float kAttenuationWall = 0.1f;
 	/*static inline const float kAttenuatuinWall = 0.1f;*/
 	
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
@@ -77,6 +80,10 @@ public:
 	void MoveByCollisionResult(const CollisionMapInfo& info);
 
 	void CheckMapLanding(const CollisionMapInfo& info);
+	//壁に接触している場合の処理
+	void CheckMapHitWall(const CollisionMapInfo& info);
+
+	void CheckMapCeiling(const CollisionMapInfo& info);
 
 	private:
 

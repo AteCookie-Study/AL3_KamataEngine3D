@@ -49,7 +49,7 @@ void GameScene::Initialize() {
 
 	// 音声再生
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
-	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,true);
+	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,false);
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	model_ = Model::CreateFromOBJ("player");

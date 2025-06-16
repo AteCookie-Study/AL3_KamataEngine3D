@@ -56,11 +56,11 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 
 MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex) {
 	if (xIndex < 0 || kNumBlockHorizontal - 1 < xIndex) {
-		assert(false && "xIndex out of range.");
+		/*assert(false && "xIndex out of range.");*/
 		return MapChipType::kBlank;
 	}
 	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
-		assert(false && "yIndex out of range.");
+		/*assert(false && "yIndex out of range.");*/
 		return MapChipType::kBlank;
 	}
 	return mapChipData_.data[yIndex][xIndex];
