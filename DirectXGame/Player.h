@@ -1,7 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "MapChipField.h"
-#include "MapChipField.h"
+
 
 class Player {
 public:
@@ -46,7 +46,7 @@ public:
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
 	static inline const float kBlank = 0.01f;
-	static inline const float kAttenuationLanding = 0.0f;
+	static inline const float kAttenuationLanding = 0.1f;
 	static inline const float kGroundSearchHeight = 0.06f;
 	static inline const float kAttenuationWall = 0.1f;
 	/*static inline const float kAttenuatuinWall = 0.1f;*/

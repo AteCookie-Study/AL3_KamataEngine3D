@@ -72,8 +72,8 @@ Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex
 
  IndexSet MapChipField::GetMapChipIndexSetByPosition(const KamataEngine::Vector3& position) {
 	IndexSet indexSet;
-	 indexSet.xIndex = static_cast<uint32_t>((position.x + kBlockWidth / 2) / kBlockWidth);
-	indexSet.yIndex = static_cast<uint32_t>((kNumBlockVirtical - 1) - (position.y / kBlockHeight));
+	indexSet.xIndex = static_cast<uint32_t>((position.x + kBlockWidth / 2) / kBlockWidth);
+	indexSet.yIndex = kNumBlockVirtical - 1 - static_cast<uint32_t>((position.y + kBlockHeight / 2) / kBlockHeight);
 	return indexSet;
 }
 
@@ -83,6 +83,6 @@ Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex
 	 rect.left = center.x - kBlockWidth / 2.0f;
 	 rect.right = center.x + kBlockWidth / 2.0f;
 	 rect.top = center.y + kBlockHeight / 2.0f;
-
-	 return rect;
+	 rect.bottom = center.y - kBlockHeight / 2.0f;
+	return rect; 
  }
