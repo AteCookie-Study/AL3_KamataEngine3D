@@ -27,7 +27,7 @@ void Player::Initialize(Model* model, Camera* camera, Vector3 position) {
 void Player::Update() {
 
 	// 着地フラグ
-	bool landing = false;
+	//bool landing = false;
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.TransferMatrix();
@@ -60,25 +60,25 @@ void Player::Update() {
 	CheckMapLanding(collisionMapInfo);
 	//  地面との当たり判定
 	//  下降中？
-	if (velocity_.y < 0) {
-		// Y座標が地面以下なら接地
-		if (worldTransform_.translation_.y <= 1.0f) {
-			landing = true;
-		}
-	}
-	if (onGround_) {
-		// 空中状态に移行
-		if (velocity_.y > 0.0f) {
-			onGround_ = false;
-		}
-	} else {
-		if (landing) {
-			worldTransform_.translation_.y = 1.0f; // 地面に着地
-			velocity_.x *= (1.0f - kAttenuation);
-			velocity_.y = 0.0f;
-			onGround_ = true;
-		}
-	}
+	//if (velocity_.y < 0) {
+	//	// Y座標が地面以下なら接地
+	//	if (worldTransform_.translation_.y <= 1.0f) {
+	//		landing = true;
+	//	}
+	//}
+	//if (onGround_) {
+	//	// 空中状态に移行
+	//	if (velocity_.y > 0.0f) {
+	//		onGround_ = false;
+	//	}
+	//} else {
+	//	if (landing) {
+	//		worldTransform_.translation_.y = 1.0f; // 地面に着地
+	//		velocity_.x *= (1.0f - kAttenuation);
+	//		velocity_.y = 0.0f;
+	//		onGround_ = true;
+	//	}
+	//}
 	//⑦旋回制御
 	AnimateTurn();
 	
@@ -327,56 +327,45 @@ void Player::CheckMapHitWall(const CollisionMapInfo& info) {
 	}
 }
 
-void Player::CheckMapLanding(const CollisionMapInfo& info) { 
+void Player::CheckMapLanding(const CollisionMapInfo& info) {
 	if (onGround_) {
-		// 着地処理
+
+		// ジャンプ開始
+		if (velocity_.y > 0.0f) {
+			onGround_ = false;
+		} else { // 空中状態の処理
+
+			MapChipType mapChipType;
+			bool hit = false;
+			IndexSet indexSet;
+			std::array<KamataEngine::Vector3, 4> positionsNew;
+			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+				positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
+			}
+			// 左下点の衝突判定
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0, -kGroundSearchHeight, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kBlock) {
+				hit = true;
+			}
+			// 右下点の衝突判定
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(0, -kGroundSearchHeight, 0));
+			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+			if (mapChipType == MapChipType::kBlock) {
+				hit = true;
+			}
+			if (!hit) {
+				onGround_ = false;
+			}
+		}
+	} else { // 着地処理
 		if (info.landing) {
 
 			onGround_ = true; // 着地状態にする
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			velocity_.y = 0.0f;
 		}
-		
-		//ジャンプ開始
-		if (velocity_.y > 0.0f) {
-
-			onGround_ = false;
-		}
-	} else {	// 空中状態の処理
-		
-		MapChipType mapChipType;
-		bool hit = false;
-		IndexSet indexSet;
-		std::array<KamataEngine::Vector3, 4> positionsNew;
-		for (uint32_t i = 0; i < positionsNew.size(); ++i) {
-			positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
-		}
-		// 左下点の衝突判定
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0, -kGroundSearchHeight, 0));
-		mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-		if (mapChipType == MapChipType::kBlock) {
-			hit = true;
-		}
-		// 右下点の衝突判定
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]+Vector3(0,-kGroundSearchHeight,0));
-		mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-		if (mapChipType == MapChipType::kBlock) {
-			hit = true;
-		}
-		if (!hit) {
-			onGround_ = false;
-		}
-
 	}
-}
-
-void Player::MoveByCollisionResult(const CollisionMapInfo& info) { 
-	worldTransform_.translation_ += info.move; 
-	if (info.ceiling) {
-		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
-		velocity_.y = 0.0f; 
-	}
-
 }
 
 void Player::CheckMapCeiling(const CollisionMapInfo& info) { 
