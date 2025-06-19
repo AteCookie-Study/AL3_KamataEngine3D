@@ -32,6 +32,7 @@ void Player::Update() {
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.TransferMatrix();
 
+
 	//①移動入力 
 	InputMove();
 
@@ -201,10 +202,10 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 		hit = true;
 	}
 	if (hit) {
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + KamataEngine::Vector3(0,kHeight/2.0f,0));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + KamataEngine::Vector3(0, kHeight / 2.0f, 0));
 		IndexSet indexSetNow;
-		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_);
-		if (indexSetNow.yIndex != indexSet.xIndex) {
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_+ KamataEngine::Vector3(0, kHeight / 2.0f, 0));
+		if (indexSetNow.yIndex != indexSet.yIndex) {
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
 			info.ceiling = true;
