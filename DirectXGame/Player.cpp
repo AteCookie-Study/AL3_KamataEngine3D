@@ -59,27 +59,7 @@ void Player::Update() {
 
 	//⑥接地状態の切り替え
 	CheckMapLanding(collisionMapInfo);
-	//  地面との当たり判定
-	//  下降中？
-	//if (velocity_.y < 0) {
-	//	// Y座標が地面以下なら接地
-	//	if (worldTransform_.translation_.y <= 1.0f) {
-	//		landing = true;
-	//	}
-	//}
-	//if (onGround_) {
-	//	// 空中状态に移行
-	//	if (velocity_.y > 0.0f) {
-	//		onGround_ = false;
-	//	}
-	//} else {
-	//	if (landing) {
-	//		worldTransform_.translation_.y = 1.0f; // 地面に着地
-	//		velocity_.x *= (1.0f - kAttenuation);
-	//		velocity_.y = 0.0f;
-	//		onGround_ = true;
-	//	}
-	//}
+	
 	//⑦旋回制御
 	AnimateTurn();
 	
