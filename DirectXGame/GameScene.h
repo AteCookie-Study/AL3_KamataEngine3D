@@ -1,6 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
@@ -20,6 +21,8 @@ class GameScene {
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Model* modelSkydome_ = nullptr;
 	KamataEngine::Camera camera_;
+	KamataEngine::Model* playerModel_ = nullptr;
+	KamataEngine::Model* enemyModel_ = nullptr;
 
 	
 
@@ -55,6 +58,9 @@ class GameScene {
 
 	// CameraController
 	CameraController* cameraController_ = nullptr;
+
+	//敵
+	Enemy* enemy_ = nullptr;
 
 
 public:

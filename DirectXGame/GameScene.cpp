@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete sprite_;
 	delete player_;
+	delete enemy_;
 	delete cameraController_;
 	delete skydome_;
 	delete debugCamera_;
@@ -52,9 +53,9 @@ void GameScene::Initialize() {
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,false);
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
-	model_ = Model::CreateFromOBJ("player");
+	playerModel_ = Model::CreateFromOBJ("player");
 	player_ = new Player();
-	player_->Initialize(model_, &camera_,playerPosition);
+	player_->Initialize(playerModel_, &camera_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
@@ -62,6 +63,15 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_ ,&camera_);
 
 	model_ = Model::CreateFromOBJ("block");
+
+	//敵
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	enemyModel_ = Model::CreateFromOBJ("enemy");
+	enemy_ = new Enemy();
+	enemy_->Initialize(enemyModel_, &camera_, enemyPosition);
+	
+	
+	
 
 
 	
@@ -99,6 +109,9 @@ void GameScene::Update() {
 
 	// player update
 	player_->Update();
+
+	// enemy update
+	enemy_->Update();
 
 	//// デバッグテキストの表示
 	// ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
@@ -140,6 +153,7 @@ void GameScene::Update() {
 
 	// カメラの転送
 	cameraController_->Update();
+
 }
 
 
@@ -166,10 +180,12 @@ void GameScene::Draw() {
 		}
 	}
 	
+	enemy_->Draw();
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
+	
 	
 }
 
