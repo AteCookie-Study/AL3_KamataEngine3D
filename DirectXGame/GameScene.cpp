@@ -65,7 +65,7 @@ void GameScene::Initialize() {
 	model_ = Model::CreateFromOBJ("block");
 
 	//敵
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
 	enemyModel_ = Model::CreateFromOBJ("enemy");
 	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, &camera_, enemyPosition);

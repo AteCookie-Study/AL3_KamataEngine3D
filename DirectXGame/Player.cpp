@@ -134,7 +134,21 @@ void Player::AnimateTurn() {
 		    std::numbers::pi_v<float> * 3.0f / 2.0f // 左向き
 		};
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		worldTransform_.rotation_.y = destinationRotationY;
+
+		// 補間率（0.2fは速さ。0.1f～0.3fくらいで調整）
+		constexpr float kLerpRate = 0.2f;
+
+		// 角度の差を求める
+		float diff = destinationRotationY - worldTransform_.rotation_.y;
+
+		// -π～πの範囲に正規化（回転の最短経路を取るため）
+		while (diff > std::numbers::pi_v<float>)
+			diff -= std::numbers::pi_v<float> * 2.0f;
+		while (diff < -std::numbers::pi_v<float>)
+			diff += std::numbers::pi_v<float> * 2.0f;
+
+		// 補間
+		worldTransform_.rotation_.y += diff * kLerpRate;
 	}
 
 }
