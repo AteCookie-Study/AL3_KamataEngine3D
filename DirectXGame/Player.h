@@ -1,7 +1,9 @@
 #pragma once
 #include "KamataEngine.h"
 #include "MapChipField.h"
+#include "MyMath.h"
 
+class Enemy;
 
 class Player {
 public:
@@ -84,6 +86,12 @@ public:
 	void CheckMapHitWall(const CollisionMapInfo& info);
 
 	void CheckMapCeiling(const CollisionMapInfo& info);
+
+	KamataEngine::Vector3 GetWorldPosition();
+
+	AABB GetAABB();
+
+	void OnCollision(const Enemy* enemy);
 
 	private:
 

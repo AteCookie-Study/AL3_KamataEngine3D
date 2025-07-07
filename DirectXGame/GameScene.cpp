@@ -7,17 +7,21 @@ using namespace MathUtility;
 
 
 
+
+
 // GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() {
 	delete model_;
 	delete modelSkydome_;
 	delete sprite_;
 	delete player_;
-	delete enemy_;
 	delete cameraController_;
 	delete skydome_;
 	delete debugCamera_;
 	delete mapChipField_;
+	for (Enemy* enemy:enemies_) {
+		delete enemy;
+	}
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -50,7 +54,7 @@ void GameScene::Initialize() {
 
 	// 音声再生
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
-	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_,false);
+	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, false);
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	playerModel_ = Model::CreateFromOBJ("player");
@@ -60,15 +64,24 @@ void GameScene::Initialize() {
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_ ,&camera_);
+	skydome_->Initialize(modelSkydome_, &camera_);
 
 	model_ = Model::CreateFromOBJ("block");
 
-	//敵
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
+	// 敵
 	enemyModel_ = Model::CreateFromOBJ("enemy");
+	/*Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
+	
+
 	enemy_ = new Enemy();
-	enemy_->Initialize(enemyModel_, &camera_, enemyPosition);
+	enemy_->Initialize(enemyModel_, &camera_, enemyPosition);*/
+
+	for (int32_t i = 0; i < kEnemyNum; ++i) {
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18 - i);
+		newEnemy->Initialize(enemyModel_, &camera_, enemyPosition);
+		enemies_.push_back(newEnemy);
+	}
 	
 	
 	
@@ -111,7 +124,10 @@ void GameScene::Update() {
 	player_->Update();
 
 	// enemy update
-	enemy_->Update();
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
+	/*enemy_->Update();*/
 
 	//// デバッグテキストの表示
 	// ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
@@ -180,13 +196,16 @@ void GameScene::Draw() {
 		}
 	}
 	
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
+	/*enemy_->Draw();*/
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
 	
-	
+	ChenckAllCollisions();
 }
 
 void GameScene::GenearteBlocks() { 
@@ -207,4 +226,24 @@ void GameScene::GenearteBlocks() {
 			}
 		}
 	}
+}
+
+void GameScene::ChenckAllCollisions() {
+    #pragma region
+
+	AABB aabb1, aabb2;
+
+	aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy : enemies_) {
+		aabb2 = enemy->GetAABB();
+		if (IsCollision(aabb1, aabb2)) {
+			player_->OnCollision(enemy);
+			enemy->OnCollision(player_);
+		}
+	}
+
+	#pragma endregion
+
+
 }

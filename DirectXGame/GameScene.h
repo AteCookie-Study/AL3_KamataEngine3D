@@ -24,6 +24,9 @@ class GameScene {
 	KamataEngine::Model* playerModel_ = nullptr;
 	KamataEngine::Model* enemyModel_ = nullptr;
 
+	//Number of enemies
+	static inline const float kEnemyNum = 1.0f;
+
 	
 
 	//　サウンドデータハンドル
@@ -60,8 +63,10 @@ class GameScene {
 	CameraController* cameraController_ = nullptr;
 
 	//敵
-	Enemy* enemy_ = nullptr;
+	//Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 
+	void ChenckAllCollisions();
 
 public:
 	~GameScene();

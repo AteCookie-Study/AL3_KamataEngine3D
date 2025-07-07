@@ -1,6 +1,9 @@
 #pragma once
 #include "KamataEngine.h"
 #include "MapChipField.h"
+#include "MyMath.h"
+
+class Player;
 
 ///< summary>
 /// 敵
@@ -23,7 +26,7 @@ public:
 
 	LRDirection lrDirection_ = LRDirection::kLeft;
 
-	static inline const float kWalkSpeed = 0.0005f;
+	static inline const float kWalkSpeed = 0.01f;
 
 	//最初の角度[度]
 	static inline const float kWalkMotionAngleStart = 0.0f;
@@ -33,6 +36,9 @@ public:
 	// 　アニメーションの周期となる時間[秒]
 	static inline const float kWalkMotionTime = 1.0f;
 	float walkTimer_ = 0.0f;
+
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 
 	// 歩く速度
 	KamataEngine::Vector3 velocity_ = {};
@@ -47,5 +53,11 @@ public:
 	KamataEngine::Camera* camera_ = nullptr;
 
 	MapChipField* mapChipField_ = nullptr;
+
+	KamataEngine::Vector3 GetWorldPosition();
+
+	AABB GetAABB();
+
+	void OnCollision(const Player* player);
 };
 
