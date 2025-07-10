@@ -1,10 +1,9 @@
 #define NOMINMAX
-#include "Enemy.h"		
-#include <numbers>
+#include "Enemy.h"
+#include "MapChipField.h"
 #include "MyMath.h"
 #include <algorithm>
-#include "MapChipField.h"
-
+#include <numbers>
 
 using namespace KamataEngine;
 using namespace MathUtility;
@@ -20,7 +19,7 @@ void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
 
-	velocity_ = {-kWalkSpeed,0,0};
+	velocity_ = {-kWalkSpeed, 0, 0};
 	walkTimer_ = 0.0f;
 }
 
@@ -31,14 +30,13 @@ void Enemy::Update() {
 
 	// 移動
 	worldTransform_.translation_ += velocity_;
-	//X　アニメーション　スビート
+	// X　アニメーション　スビート
 	walkTimer_ += 1.0f / 20.0f;
 
-	//回转アニメーション
+	// 回转アニメーション
 	float param = std::sin(walkTimer_);
 	float degree = kWalkMotionAngleStart + kWalkMotionAngleEnd + (param + 1.0f) / 2.0f;
 	worldTransform_.rotation_.x = std::sin(degree);
-	
 }
 
 void Enemy::Draw() {
@@ -58,7 +56,6 @@ void Enemy::AnimateTurn() {
 		worldTransform_.rotation_.y = destinationRotationY;
 	}
 }
-
 
 Vector3 Enemy::GetWorldPosition() {
 	Vector3 worldPos;
@@ -81,6 +78,4 @@ AABB Enemy::GetAABB() {
 	return aabb;
 }
 
-void Enemy::OnCollision(const Player* player) { 
-	(void)player;
-}
+void Enemy::OnCollision(const Player* player) { (void)player; }

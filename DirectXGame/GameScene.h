@@ -1,20 +1,15 @@
 #pragma once
-#include "KamataEngine.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "skydome.h"
-#include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
+#include "KamataEngine.h"
+#include "MapChipField.h"
+#include "Player.h"
+#include "skydome.h"
 #include <vector>
-
-
-
-
 
 // ゲームシーン
 class GameScene {
-	private:
-
+private:
 	KamataEngine::Input* input_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	KamataEngine::Sprite* sprite_ = nullptr;
@@ -24,23 +19,19 @@ class GameScene {
 	KamataEngine::Model* playerModel_ = nullptr;
 	KamataEngine::Model* enemyModel_ = nullptr;
 
-	//Number of enemies
+	// Number of enemies
 	static inline const float kEnemyNum = 1.0f;
 
-	
-
-	//　サウンドデータハンドル
+	// 　サウンドデータハンドル
 	uint32_t soundDataHandle_ = 0;
 
 	// 音声再生ハンドル
 	uint32_t voiceHandle_ = 0;
-	
+
 	// ワルドトランスフォーム
 	KamataEngine::WorldTransform worldTransform_;
 
-
-
-	//Player
+	// Player
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
 
@@ -49,7 +40,6 @@ class GameScene {
 	// デバッグカメラ有效
 	bool isDebugCameraActive_ = false;
 
-	
 	// デバッグカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 
@@ -62,8 +52,8 @@ class GameScene {
 	// CameraController
 	CameraController* cameraController_ = nullptr;
 
-	//敵
-	//Enemy* enemy_ = nullptr;
+	// 敵
+	// Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 
 	void ChenckAllCollisions();

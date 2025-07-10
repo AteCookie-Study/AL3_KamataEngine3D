@@ -54,7 +54,4 @@ public:
 	IndexSet GetMapChipIndexSetByPosition(const KamataEngine::Vector3& position);
 
 	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
-
-	
 };
-

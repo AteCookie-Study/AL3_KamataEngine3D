@@ -9,7 +9,7 @@ class Player {
 public:
 	Player();
 	~Player();
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,const KamataEngine::Vector3 position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3 position);
 	void Update();
 	void Draw();
 
@@ -38,12 +38,12 @@ public:
 
 	KamataEngine::Vector3 velocity_ = {};
 	static inline const float kAcceleration = 0.1f;
-	static inline const float kAttenuation = 0.9f;	
+	static inline const float kAttenuation = 0.9f;
 	static inline const float kLimitRunSpeed = 0.5f;
 
 	bool onGround_ = true;
 	static inline const float kGravityAcceleration = 0.1f;
-	static inline const float kLimitFallSpeed = 1.0f;	
+	static inline const float kLimitFallSpeed = 1.0f;
 	static inline const float kJumpAcceleration = 1.0f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
@@ -52,11 +52,12 @@ public:
 	static inline const float kGroundSearchHeight = 0.06f;
 	static inline const float kAttenuationWall = 0.1f;
 	/*static inline const float kAttenuatuinWall = 0.1f;*/
-	
+
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
 	enum class LRDirection {
-		kRight, kLeft,
+		kRight,
+		kLeft,
 	};
 	LRDirection lrDirection_ = LRDirection::kRight;
 
@@ -73,16 +74,13 @@ public:
 		kNumCorner
 	};
 
-	
 	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
-
-
-	//判定結果を反映して移動させる
+	// 判定結果を反映して移動させる
 	void MoveByCollisionResult(const CollisionMapInfo& info);
 
 	void CheckMapLanding(const CollisionMapInfo& info);
-	//壁に接触している場合の処理
+	// 壁に接触している場合の処理
 	void CheckMapHitWall(const CollisionMapInfo& info);
 
 	void CheckMapCeiling(const CollisionMapInfo& info);
@@ -93,19 +91,15 @@ public:
 
 	void OnCollision(const Enemy* enemy);
 
-	private:
+private:
+	// ワルド変換データ
+	KamataEngine::WorldTransform worldTransform_;
 
-	//ワルド変換データ
- KamataEngine::WorldTransform worldTransform_;
+	// モデル
+	KamataEngine::Model* model_ = nullptr;
 
- //モデル
- KamataEngine::Model* model_ = nullptr;
+	// カメラ
+	KamataEngine::Camera* camera_ = nullptr;
 
- 
-
- // カメラ
- KamataEngine::Camera* camera_ = nullptr;
-
- MapChipField* mapChipField_ = nullptr;
-
+	MapChipField* mapChipField_ = nullptr;
 };

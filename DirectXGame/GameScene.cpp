@@ -1,13 +1,8 @@
 #include "GameScene.h"
 #include "MyMath.h"
 
-
 using namespace KamataEngine;
 using namespace MathUtility;
-
-
-
-
 
 // GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() {
@@ -19,7 +14,7 @@ GameScene::~GameScene() {
 	delete skydome_;
 	delete debugCamera_;
 	delete mapChipField_;
-	for (Enemy* enemy:enemies_) {
+	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -30,7 +25,6 @@ GameScene::~GameScene() {
 
 	worldTransformBlocks_.clear();
 }
-
 
 void GameScene::Initialize() {
 	// 初期化処理
@@ -71,7 +65,7 @@ void GameScene::Initialize() {
 	// 敵
 	enemyModel_ = Model::CreateFromOBJ("enemy");
 	/*Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
-	
+
 
 	enemy_ = new Enemy();
 	enemy_->Initialize(enemyModel_, &camera_, enemyPosition);*/
@@ -82,12 +76,6 @@ void GameScene::Initialize() {
 		newEnemy->Initialize(enemyModel_, &camera_, enemyPosition);
 		enemies_.push_back(newEnemy);
 	}
-	
-	
-	
-
-
-	
 
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
@@ -96,12 +84,10 @@ void GameScene::Initialize() {
 
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovavleArea(cameraArea);
-	
+
 	// デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280,720);
+	debugCamera_ = new DebugCamera(1280, 720);
 }
-
-
 
 void GameScene::Update() {
 	// スプライトの今の座標を取得
@@ -169,15 +155,12 @@ void GameScene::Update() {
 
 	// カメラの転送
 	cameraController_->Update();
-
 }
-
 
 void GameScene::Draw() {
 	// 描画処理
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-	
 
 	// 3Dモデルの描画前処理
 	Model::PreDraw(dxCommon->GetCommandList());
@@ -186,7 +169,7 @@ void GameScene::Draw() {
 	player_->Draw();
 
 	// ブロックの描画
-	
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -195,7 +178,7 @@ void GameScene::Draw() {
 			model_->Draw(*worldTransformBlock, camera_);
 		}
 	}
-	
+
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
@@ -204,32 +187,31 @@ void GameScene::Draw() {
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
-	
 	ChenckAllCollisions();
 }
 
-void GameScene::GenearteBlocks() { 
-	uint32_t numBlockVirtical = mapChipField_-> GetNumBlockVirtical();
+void GameScene::GenearteBlocks() {
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
-    worldTransformBlocks_.resize(numBlockVirtical);
+	worldTransformBlocks_.resize(numBlockVirtical);
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
-			if (mapChipField_-> GetMapChipTypeByIndex(j,i) == MapChipType::kBlock ){
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i); 
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
 		}
 	}
 }
 
 void GameScene::ChenckAllCollisions() {
-    #pragma region
+#pragma region
 
 	AABB aabb1, aabb2;
 
@@ -243,7 +225,5 @@ void GameScene::ChenckAllCollisions() {
 		}
 	}
 
-	#pragma endregion
-
-
+#pragma endregion
 }

@@ -6,7 +6,7 @@ Skydome::Skydome() {}
 Skydome::~Skydome() {}
 
 void Skydome::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera) {
-	
+
 	model_ = model;
 	camera_ = camera;
 	worldTransform_.Initialize();

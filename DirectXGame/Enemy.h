@@ -28,7 +28,7 @@ public:
 
 	static inline const float kWalkSpeed = 0.01f;
 
-	//最初の角度[度]
+	// 最初の角度[度]
 	static inline const float kWalkMotionAngleStart = 0.0f;
 	// 最後の角度[度]
 	static inline const float kWalkMotionAngleEnd = 15.0f;
@@ -43,7 +43,7 @@ public:
 	// 歩く速度
 	KamataEngine::Vector3 velocity_ = {};
 
-		// ワルド変換データ
+	// ワルド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
 	// モデル
@@ -60,4 +60,3 @@ public:
 
 	void OnCollision(const Player* player);
 };
-

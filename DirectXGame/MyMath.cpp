@@ -1,8 +1,8 @@
-#include "MyMath.h" 
+#include "MyMath.h"
 using namespace KamataEngine;
 using namespace MathUtility;
 
-KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3 &scale, KamataEngine::Vector3 &rotation, KamataEngine::Vector3 &translation) {
+KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3& scale, KamataEngine::Vector3& rotation, KamataEngine::Vector3& translation) {
 	// スケーリング行列の作成
 	Matrix4x4 matScale = MakeScaleMatrix(scale);
 	// 回転行列の作成
@@ -20,4 +20,3 @@ KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3 &scale, KamataEng
 bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 	return (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) && (aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) && (aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z);
 }
-    
