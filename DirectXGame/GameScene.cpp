@@ -14,6 +14,8 @@ GameScene::~GameScene() {
 	delete skydome_;
 	delete debugCamera_;
 	delete mapChipField_;
+	delete deathModel_;
+	
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
@@ -50,7 +52,7 @@ void GameScene::Initialize() {
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, false);
 
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
 	playerModel_ = Model::CreateFromOBJ("player");
 	player_ = new Player();
 	player_->Initialize(playerModel_, &camera_, playerPosition);
@@ -85,6 +87,10 @@ void GameScene::Initialize() {
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovavleArea(cameraArea);
 
+	deathModel_ = Model::CreateFromOBJ("deathParticle");
+	deathParticles_ = new DeathParticles();
+	deathParticles_->Initialize(deathModel_, &camera_, playerPosition);
+
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 }
@@ -114,6 +120,8 @@ void GameScene::Update() {
 		enemy->Update();
 	}
 	/*enemy_->Update();*/
+
+	deathParticles_->Update();
 
 	//// デバッグテキストの表示
 	// ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
@@ -184,10 +192,14 @@ void GameScene::Draw() {
 	}
 	/*enemy_->Draw();*/
 
+	deathParticles_->Draw();
+
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
 	ChenckAllCollisions();
+
+	
 }
 
 void GameScene::GenearteBlocks() {

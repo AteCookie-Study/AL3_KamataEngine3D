@@ -5,6 +5,7 @@
 #include "MapChipField.h"
 #include "Player.h"
 #include "skydome.h"
+#include "DeathParticles.h"
 #include <vector>
 
 // ゲームシーン
@@ -18,6 +19,8 @@ private:
 	KamataEngine::Camera camera_;
 	KamataEngine::Model* playerModel_ = nullptr;
 	KamataEngine::Model* enemyModel_ = nullptr;
+	KamataEngine::Model* deathModel_ = nullptr;
+	DeathParticles* deathParticles_ = nullptr;
 
 	// Number of enemies
 	static inline const float kEnemyNum = 1.0f;
