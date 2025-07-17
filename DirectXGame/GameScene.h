@@ -22,6 +22,13 @@ private:
 	KamataEngine::Model* deathModel_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
+	enum class Phase {
+		kPlay,
+		kDeath,
+	};
+
+	Phase phase_;
+
 	// Number of enemies
 	static inline const float kEnemyNum = 1.0f;
 
@@ -60,6 +67,8 @@ private:
 	std::list<Enemy*> enemies_;
 
 	void ChenckAllCollisions();
+
+	void ChangePhase();
 
 public:
 	~GameScene();

@@ -91,6 +91,10 @@ public:
 
 	void OnCollision(const Enemy* enemy);
 
+	bool isDead_ = false;
+
+	bool IsDead() const { return isDead_; }	
+
 private:
 	// ワルド変換データ
 	KamataEngine::WorldTransform worldTransform_;

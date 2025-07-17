@@ -30,6 +30,8 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 	// 初期化処理
+	phase_ = Phase::kPlay;
+	
 	textureHandle_ = TextureManager::Load("Cookie.png");
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
 	model_ = Model::Create();
@@ -93,18 +95,15 @@ void GameScene::Initialize() {
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+
 }
 
 void GameScene::Update() {
-	// スプライトの今の座標を取得
-	Vector2 position = sprite_->GetPosition();
+	ChangePhase();
 
-	// 座標を{2,1}移動
-	position.x += 2.0f;
-	position.y += 1.0f;
+	
 
-	// 移動した座標をスプライトに反応
-	sprite_->SetPosition(position);
+
 
 	// スペースキーを押した瞬間
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
@@ -112,30 +111,13 @@ void GameScene::Update() {
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
 
-	// player update
-	player_->Update();
 
-	// enemy update
-	for (Enemy* enemy : enemies_) {
-		enemy->Update();
-	}
-	/*enemy_->Update();*/
-
-	deathParticles_->Update();
+	
 
 	//// デバッグテキストの表示
 	// ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
 
-	// ブロック更新
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
-		}
-	}
+	
 
 	// デバッグカメラの更新
 	debugCamera_->Update();
@@ -161,8 +143,7 @@ void GameScene::Update() {
 		camera_.TransferMatrix();
 	}
 
-	// カメラの転送
-	cameraController_->Update();
+	
 }
 
 void GameScene::Draw() {
@@ -238,4 +219,57 @@ void GameScene::ChenckAllCollisions() {
 	}
 
 #pragma endregion
+}
+
+void GameScene::ChangePhase() {
+
+	skydome_->Update();
+
+	// ブロック更新
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+
+	// カメラの転送
+	cameraController_->Update();
+	// スプライトの今の座標を取得
+	Vector2 position = sprite_->GetPosition();
+
+	// 座標を{2,1}移動
+	position.x += 2.0f;
+	position.y += 1.0f;
+
+	// 移動した座標をスプライトに反応
+	sprite_->SetPosition(position);
+
+	// enemy update
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
+
+	switch (phase_) {
+	case Phase::kPlay:
+		// player update
+		player_->Update();
+
+		if (player_->isDead_) {
+			// 死亡した場合はフェーズを変更
+			phase_ = Phase::kDeath;
+			const Vector3& deathParticlesposition = player_->GetWorldPosition();
+			deathParticles_->Initialize(deathModel_, &camera_, deathParticlesposition);
+		}
+
+		break;
+	case Phase::kDeath:
+		deathParticles_->Update();
+
+		break;
+	}
+
 }
