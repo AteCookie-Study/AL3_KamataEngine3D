@@ -24,6 +24,10 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() { 
 
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+		finished_ = true; // 空格键触发时设置为完成状态
+	}	
+
 	const float speed = 0.01f;
 
 	// 根据当前方向修改y坐标

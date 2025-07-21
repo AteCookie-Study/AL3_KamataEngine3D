@@ -22,6 +22,8 @@ private:
 	KamataEngine::Model* deathModel_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
+	
+
 	enum class Phase {
 		kPlay,
 		kDeath,
@@ -78,4 +80,7 @@ public:
 	void Update();
 	// 描画
 	void Draw();
+
+	bool finished_ = false;
+	bool IsFinished() const { return finished_; }
 };

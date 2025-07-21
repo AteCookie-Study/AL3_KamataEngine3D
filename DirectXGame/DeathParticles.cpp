@@ -34,6 +34,8 @@ void DeathParticles::Update() {
 	if (isFinished_) {
 		return;
 	}
+
+
 	
 	for (uint32_t i = 0; i < kNumParticles; ++i) {
 		Vector3 velocity = {kSpeed, 0, 0};

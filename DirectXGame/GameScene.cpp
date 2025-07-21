@@ -107,7 +107,11 @@ void GameScene::Update() {
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
 
-
+	if (deathParticles_ && deathParticles_->IsFinished()) {
+		// 死亡パーティクルが終了したらフェーズを変更
+		phase_ = Phase::kPlay;
+		
+	}
 	
 
 	//// デバッグテキストの表示
@@ -259,6 +263,7 @@ void GameScene::ChangePhase() {
 			phase_ = Phase::kDeath;
 			const Vector3& deathParticlesposition = player_->GetWorldPosition();
 			deathParticles_->Initialize(deathModel_, &camera_, deathParticlesposition);
+
 		}
 
 		break;

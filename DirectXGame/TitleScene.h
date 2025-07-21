@@ -24,6 +24,8 @@ private:
 	float titlePosY_ = 1.0f; // 当前Y位置，初始中心1.0
 	bool titleMoveUp_ = true; 
 
+	
+
 public:
 	TitleScene();
 	~TitleScene();
@@ -36,5 +38,6 @@ public:
 	void Update();
 	void Draw();
 
-
+	bool finished_ = false;
+	bool IsFinished() const { return finished_; }
 };

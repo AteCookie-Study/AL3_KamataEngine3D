@@ -19,6 +19,7 @@ public:
 	void Update();
 	void Draw();
 
+	bool IsFinished() const { return isFinished_; }
 	
 // モデル
 	KamataEngine::Model* model_ = nullptr;
@@ -41,6 +42,8 @@ public:
 	// 倒计时
 	float counter_ = 0.0f;
 
+ 
+    
 	KamataEngine::ObjectColor objectColor_;
 	KamataEngine::Vector4 color_;
 };
