@@ -101,10 +101,6 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	ChangePhase();
 
-	
-
-
-
 	// スペースキーを押した瞬間
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		// 音声を停止
