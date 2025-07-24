@@ -154,9 +154,10 @@ void GameScene::Draw() {
 	// 3Dモデルの描画前処理
 	Model::PreDraw(dxCommon->GetCommandList());
 	modelSkydome_->Draw(worldTransform_, camera_);
-	// player draw
-	player_->Draw();
-
+	/// player draw
+	if (player_->isDead_ == false) {
+		player_->Draw();
+	}
 	// ブロックの描画
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
