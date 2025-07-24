@@ -160,7 +160,10 @@ void GameScene::Draw() {
 	Model::PreDraw(dxCommon->GetCommandList());
 	modelSkydome_->Draw(worldTransform_, camera_);
 	// player draw
-	player_->Draw();
+	if (player_->isDead_ == false) {
+		player_->Draw();
+	}
+	
 
 	// ブロックの描画
 
