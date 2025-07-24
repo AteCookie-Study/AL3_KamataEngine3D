@@ -30,7 +30,7 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 	// 初期化処理
-	phase_ = Phase::kPlay;
+	phase_ = Phase::kFadeIn;
 	
 	textureHandle_ = TextureManager::Load("Cookie.png");
 	sprite_ = Sprite::Create(textureHandle_, {100, 50});
@@ -96,6 +96,10 @@ void GameScene::Initialize() {
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, kFadeTime);
+
 }
 
 void GameScene::Update() {
@@ -107,11 +111,11 @@ void GameScene::Update() {
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
 
-	if (deathParticles_ && deathParticles_->IsFinished()) {
-		// 死亡パーティクルが終了したらフェーズを変更
-		phase_ = Phase::kPlay;
-		
-	}
+	//if (deathParticles_ && deathParticles_->IsFinished()) {
+	//	// 死亡パーティクルが終了したらフェーズを変更
+	//	phase_ = Phase::kPlay;
+	//	
+	//}
 
 	
 
@@ -176,6 +180,7 @@ void GameScene::Draw() {
 
 	deathParticles_->Draw();
 
+	fade_->Draw();
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
@@ -255,6 +260,12 @@ void GameScene::ChangePhase() {
 	}
 
 	switch (phase_) {
+		case Phase::kFadeIn:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kPlay;
+		}
+		    break;
 	case Phase::kPlay:
 		// player update
 		player_->Update();
@@ -270,8 +281,20 @@ void GameScene::ChangePhase() {
 		break;
 	case Phase::kDeath:
 		deathParticles_->Update();
-		finished_ = deathParticles_->IsFinished();
+		if (deathParticles_->IsFinished()) {
+			// 死亡パーティクルが終了したらフェーズを変更
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, kFadeTime);
+		}
+		
+		break;
+	case Phase::kFadeOut:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
 		break;
 	}
+    
 
 }

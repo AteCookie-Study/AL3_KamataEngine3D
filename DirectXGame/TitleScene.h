@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "CameraController.h"
 #include "Fade.h"
+
 #include <vector>
 
 
@@ -31,6 +32,9 @@ private:
 		kFadeOut,
 	};
 
+	
+	
+
 	Phase phase_ = Phase::kFadeIn; 
 	
 	static constexpr float kFadeTime = 1.0f;
@@ -47,6 +51,7 @@ public:
 	void Update();
 	void Draw();
 
+	float counter_ = 0.0f;
 	bool finished_ = false;
 	bool IsFinished() const { return finished_; }
 

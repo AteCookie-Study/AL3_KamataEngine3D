@@ -17,14 +17,14 @@ void Fade::Update() {
 		break;
 	case Fade::Status::FadeIn:
 		counter_ += 1.0f / 60.0f; // 60FPSでカウントアップ
-		if (counter_ > duration_) {
+		if (counter_ >= duration_) {
 			counter_ = duration_;
 		}
 		sprite_->SetColor(Vector4(0, 0, 0, std::clamp(1.0f - counter_ / duration_, 0.0f, 1.0f)));
 		break;
 	case Fade::Status::FadeOut:
 		counter_ += 1.0f / 60.0f; // 60FPSでカウントアップ
-		if (counter_ > duration_) {
+		if (counter_ >= duration_) {
 			counter_ = duration_;
 		}
 		sprite_->SetColor(Vector4(0, 0, 0, std::clamp(counter_ / duration_, 0.0f, 1.0f)));
@@ -51,7 +51,7 @@ void Fade::Start(Status status, float duration) {
 
 void Fade::Stop() { status_ = Status::None; }
 
-bool Fade::isFinished() const {
+bool Fade::IsFinished() const {
 	switch (status_) {
 	case Status::FadeIn:
 	case Status::FadeOut:

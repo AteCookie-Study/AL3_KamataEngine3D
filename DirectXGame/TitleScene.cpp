@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include <cmath>
+#include <numbers>
 
 using namespace KamataEngine;
 
@@ -26,43 +27,43 @@ void TitleScene::Initialize() {
     camera_.Initialize(); 
 	fade_ = new Fade();
 	fade_->Initialize();
-	fade_->Start(Fade::Status::FadeIn, 1.0f); 
+	fade_->Start(Fade::Status::FadeIn, kFadeTime);
 };
 
-void TitleScene::Update() { 
-	fade_->Update(); 
+void TitleScene::Update() {
+	fade_->Update();
 
-	//switch (phase_) {
-	//case Phase::kFadeIn:
-	//	// player update
-	//	fade_->Update(); 
- //       phase_ = Phase::kMain;
-	//	
+	switch (phase_) { case Phase::kFadeIn:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+			fade_->Start(Fade::Status::FadeOut, kFadeTime);
+			phase_ = Phase::kFadeOut; 
+			
+		}
+		break;
+	case Phase::kFadeOut:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true; 
+		}
+		break;
 
-	//	break;
-	//case Phase::kMain:
-	//	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
-	//		if (fade_) {
-	//			fade_->Start(Fade::Status::FadeOut, kFadeTime);
-	//		}
-	//		phase_ = Phase::kFadeOut;
-	//	}
-	//	break;
+	}
+	//counter_ += 1.0f / 60.0f; // 假设每秒60帧
+	//counter_ = std::fmod(counter_, 2.0f); // 保持在0到100之间
+	//float angle = counter_ * 2.0f * std::numbers::pi_v<float>; // 计算角度
 
- //   case Phase::kFadeOut:
-	//	if (fade_) {
-	//		fade_->Update();
-	//		
-	//			finished_ = true;
-	//		
-	//	}
-	//	break;
 
-	//}
+										 
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		finished_ = true; // 空格键触发时设置为完成状态
-	}	
+	//if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	//	finished_ = true; // 空格键触发时设置为完成状态
+	//}	
 
 	const float speed = 0.01f;
 

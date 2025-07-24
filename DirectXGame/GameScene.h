@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "skydome.h"
 #include "DeathParticles.h"
+#include "Fade.h"
 #include <vector>
 
 // ゲームシーン
@@ -25,8 +26,10 @@ private:
 	
 
 	enum class Phase {
+		kFadeIn,
 		kPlay,
 		kDeath,
+		kFadeOut,
 	};
 
 	Phase phase_;
@@ -71,6 +74,7 @@ private:
 	void ChenckAllCollisions();
 
 	void ChangePhase();
+	static constexpr float kFadeTime = 1.0f;
 
 public:
 	~GameScene();
@@ -83,4 +87,5 @@ public:
 
 	bool finished_ = false;
 	bool IsFinished() const { return finished_; }
+	Fade* fade_ = nullptr;
 };

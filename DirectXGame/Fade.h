@@ -25,8 +25,9 @@ public:
 
 	void Start(Status status, float duration);
 	void Stop();
+	bool IsFinished() const;
 
 private:
-	bool isFinished() const;
+	
 	
 };
