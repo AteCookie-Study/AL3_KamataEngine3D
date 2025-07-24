@@ -269,6 +269,8 @@ void GameScene::ChangePhase() {
 		break;
 	case Phase::kDeath:
 		deathParticles_->Update();
+		finished_ = deathParticles_->IsFinished();
+
 
 		break;
 	}
