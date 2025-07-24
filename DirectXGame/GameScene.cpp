@@ -112,6 +112,7 @@ void GameScene::Update() {
 		phase_ = Phase::kPlay;
 		
 	}
+
 	
 
 	//// デバッグテキストの表示
