@@ -8,6 +8,7 @@ TitleScene::TitleScene() {};
 TitleScene ::~TitleScene(){ 
 	delete titleModel_;
 	delete playerModel_;
+	delete bgModel_;
 	delete fade_;
 
 };
@@ -18,12 +19,15 @@ void TitleScene::Initialize() {
 	fade_->Start(Fade::Status::FadeIn, kFadeTime); 
 
 	titleModel_ = Model::CreateFromOBJ("title");
-	playerModel_ = Model::CreateFromOBJ("player");
+	playerModel_ = Model::CreateFromOBJ("slime");
+	bgModel_ = Model::CreateFromOBJ("BG");
 	// ワルドトランスフォームの初期化
 	titleTransform_.Initialize();
 	playerTransform_.Initialize();
+	bgTransform_.Initialize();
 	titleTransform_.translation_ = {5.0f, 5.0f, 5.0f}; 
 	playerTransform_.translation_ = {5.0f, 5.0f, 5.0f}; 
+	playerTransform_.translation_ = {10.0f, 10.0f, 10.0f}; 
     camera_.Initialize(); 
 	fade_ = new Fade();
 	fade_->Initialize();
@@ -83,11 +87,14 @@ void TitleScene::Update() {
 	}
 	titleTransform_.matWorld_ = MakeAffineMatrix(titleTransform_.scale_, titleTransform_.rotation_, titleTransform_.translation_);
 	playerTransform_.matWorld_ = MakeAffineMatrix(playerTransform_.scale_, playerTransform_.rotation_, playerTransform_.translation_);
+	bgTransform_.matWorld_ = MakeAffineMatrix(bgTransform_.scale_, bgTransform_.rotation_, bgTransform_.translation_);
 	titleTransform_.TransferMatrix();
 	playerTransform_.TransferMatrix();
+	bgTransform_.TransferMatrix();
 	playerTransform_.rotation_.y = 3.14159f; 
 	titleTransform_.translation_ = {0.0f, titlePosY_, -45.0f}; 
 	playerTransform_.translation_ = {0.0f, -0.8f, -45.0f}; 
+	bgTransform_.translation_ = {0.0f, -0.80f, -40.0f}; 
 
 }
 
@@ -98,6 +105,7 @@ void TitleScene::Draw() {
 	Model::PreDraw(dxCommon->GetCommandList());
 	titleModel_->Draw(titleTransform_, camera_);
 	playerModel_->Draw(playerTransform_, camera_);
+	bgModel_->Draw(bgTransform_, camera_);
 	fade_->Draw();
 
 	// 3Dモデル描画後処理

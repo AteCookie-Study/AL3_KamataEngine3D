@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete mapChipField_;
 	delete deathModel_;
+	delete endPointModel_;
 	
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
@@ -54,8 +55,8 @@ void GameScene::Initialize() {
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, false);
 
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
-	playerModel_ = Model::CreateFromOBJ("player");
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	playerModel_ = Model::CreateFromOBJ("slime");
 	player_ = new Player();
 	player_->Initialize(playerModel_, &camera_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
@@ -65,9 +66,9 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_, &camera_);
 
 	model_ = Model::CreateFromOBJ("block");
-
+	
 	// 敵
-	enemyModel_ = Model::CreateFromOBJ("enemy");
+	enemyModel_ = Model::CreateFromOBJ("ghost");
 	/*Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
 
 
@@ -76,7 +77,7 @@ void GameScene::Initialize() {
 
 	for (int32_t i = 0; i < kEnemyNum; ++i) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18 - i);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(30 - i * 8, 18);
 		newEnemy->Initialize(enemyModel_, &camera_, enemyPosition);
 		enemies_.push_back(newEnemy);
 	}
@@ -175,6 +176,7 @@ void GameScene::Draw() {
 			model_->Draw(*worldTransformBlock, camera_);
 		}
 	}
+	
 
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
@@ -183,12 +185,12 @@ void GameScene::Draw() {
 
 	deathParticles_->Draw();
 
-	fade_->Draw();
+
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
 	ChenckAllCollisions();
-
+	
 	
 }
 
@@ -227,8 +229,19 @@ void GameScene::ChenckAllCollisions() {
 		}
 	}
 
+	// 检查玩家是否碰到kEnd地图
+	Vector3 playerPos = player_->GetWorldPosition();
+	MapChipType chipType = mapChipField_->GetMapChipTypeByIndex(
+		mapChipField_->GetMapChipIndexSetByPosition(playerPos).xIndex,
+		mapChipField_->GetMapChipIndexSetByPosition(playerPos).yIndex);
+	if (chipType == MapChipType::kEnd) {
+		player_->isDead_ = true;
+	}
+
 #pragma endregion
 }
+
+
 
 void GameScene::ChangePhase() {
 
@@ -244,6 +257,7 @@ void GameScene::ChangePhase() {
 			worldTransformBlock->TransferMatrix();
 		}
 	}
+	
 
 	// カメラの転送
 	cameraController_->Update();

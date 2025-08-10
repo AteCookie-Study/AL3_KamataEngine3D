@@ -21,6 +21,7 @@ void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,
 
 	velocity_ = {-kWalkSpeed, 0, 0};
 	walkTimer_ = 0.0f;
+	movedDistance_ = 0.0f;
 }
 
 void Enemy::Update() {
@@ -30,6 +31,16 @@ void Enemy::Update() {
 
 	// 移動
 	worldTransform_.translation_ += velocity_;
+	movedDistance_ += std::abs(velocity_.x); // 累加移动距离
+
+	// 每移动5格就回头
+	if (movedDistance_ >= 5.0f) {
+		velocity_.x = -velocity_.x; // 反向
+
+		lrDirection_ = (lrDirection_ == LRDirection::kLeft) ? LRDirection::kRight : LRDirection::kLeft;
+		AnimateTurn();              // 旋转
+		movedDistance_ = 0.0f;      // 重置累计距离
+	}
 	// X　アニメーション　スビート
 	walkTimer_ += 1.0f / 20.0f;
 

@@ -9,6 +9,7 @@
 #include "Fade.h"
 #include <vector>
 
+
 // ゲームシーン
 class GameScene {
 private:
@@ -21,6 +22,7 @@ private:
 	KamataEngine::Model* playerModel_ = nullptr;
 	KamataEngine::Model* enemyModel_ = nullptr;
 	KamataEngine::Model* deathModel_ = nullptr;
+	KamataEngine::Model* endPointModel_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
 
 	
@@ -35,7 +37,7 @@ private:
 	Phase phase_;
 
 	// Number of enemies
-	static inline const float kEnemyNum = 1.0f;
+	static inline const float kEnemyNum = 3.0f;
 
 	// 　サウンドデータハンドル
 	uint32_t soundDataHandle_ = 0;
@@ -51,6 +53,7 @@ private:
 	Skydome* skydome_ = nullptr;
 
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformEnd_;
 
 	// デバッグカメラ有效
 	bool isDebugCameraActive_ = false;
@@ -75,6 +78,8 @@ private:
 
 	void ChangePhase();
 	static constexpr float kFadeTime = 1.0f;
+
+	KamataEngine::WorldTransform endPointTransform_; 
 
 public:
 	~GameScene();

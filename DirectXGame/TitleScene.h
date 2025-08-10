@@ -17,10 +17,12 @@ private:
 	KamataEngine::Input* input_ = nullptr;
 	KamataEngine::Model* titleModel_ = nullptr;
 	KamataEngine::Model* playerModel_ = nullptr;
+	KamataEngine::Model* bgModel_ = nullptr;
 
 	// ワルドトランスフォーム
 	KamataEngine::WorldTransform titleTransform_; 
 	KamataEngine::WorldTransform playerTransform_; 
+	KamataEngine::WorldTransform bgTransform_; 
 	KamataEngine::Camera camera_; 
 
 	float titlePosY_ = 1.0f; 

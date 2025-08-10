@@ -59,4 +59,6 @@ public:
 	AABB GetAABB();
 
 	void OnCollision(const Player* player);
+
+	float movedDistance_ = 0.0f;
 };
