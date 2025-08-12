@@ -40,6 +40,11 @@ private:
 	Phase phase_ = Phase::kFadeIn; 
 	
 	static constexpr float kFadeTime = 1.0f;
+	// 　サウンドデータハンドル
+	uint32_t soundDataHandle_ = 0;
+
+	// 音声再生ハンドル
+	uint32_t voiceHandle_ = 0;
 
 public:
 	TitleScene();

@@ -32,6 +32,13 @@ void TitleScene::Initialize() {
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, kFadeTime);
+
+	// 　サウンドデータの読込み
+	soundDataHandle_ = Audio::GetInstance()->LoadWave("A.wav");
+
+	// 音声再生
+	/*Audio::GetInstance()->PlayWave(soundDataHandle_);*/
+	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, true);
 };
 
 void TitleScene::Update() {
@@ -40,11 +47,13 @@ void TitleScene::Update() {
 	switch (phase_) { case Phase::kFadeIn:
 		fade_->Update();
 		if (fade_->IsFinished()) {
+			
 			phase_ = Phase::kMain;
 		}
 		break;
 	case Phase::kMain:
 		if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+			Audio::GetInstance()->StopWave(voiceHandle_);
 			fade_->Start(Fade::Status::FadeOut, kFadeTime);
 			phase_ = Phase::kFadeOut; 
 			

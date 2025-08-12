@@ -27,7 +27,7 @@ void DrawScene();
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	
 	// エンジンの初期化
-	KamataEngine::Initialize(L"GC2C_03_キョク_キンウ_AL3_3D");
+	KamataEngine::Initialize(L"GC2C_03_キョク_キンウ_Running Slime");
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();

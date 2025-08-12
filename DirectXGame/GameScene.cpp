@@ -49,11 +49,11 @@ void GameScene::Initialize() {
 	camera_.Initialize();
 
 	// 　サウンドデータの読込み
-	soundDataHandle_ = Audio::GetInstance()->LoadWave("mokugyo.wav");
+	soundDataHandle_ = Audio::GetInstance()->LoadWave("B.wav");
 
 	// 音声再生
-	Audio::GetInstance()->PlayWave(soundDataHandle_);
-	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, false);
+	/*Audio::GetInstance()->PlayWave(soundDataHandle_);*/
+	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, true);
 
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	playerModel_ = Model::CreateFromOBJ("slime");
@@ -299,6 +299,7 @@ void GameScene::ChangePhase() {
 	case Phase::kDeath:
 		deathParticles_->Update();
 		if (deathParticles_->IsFinished()) {
+			Audio::GetInstance()->StopWave(voiceHandle_);
 			// 死亡パーティクルが終了したらフェーズを変更
 			phase_ = Phase::kFadeOut;
 			fade_->Start(Fade::Status::FadeOut, kFadeTime);

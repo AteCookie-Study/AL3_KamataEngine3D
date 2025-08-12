@@ -4,6 +4,7 @@
 #include "MyMath.h"
 #include <algorithm>
 #include <numbers>
+#include <cassert>
 
 using namespace KamataEngine;
 using namespace MathUtility;
